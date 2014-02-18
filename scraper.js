@@ -1,7 +1,8 @@
 var cheerio = require('cheerio');
 var request = require('request');
 var fs      = require('fs');
-var url     = require('url')
+var url     = require('url');
+var moment  = require('moment');
 var _       = require('lodash');
 
 if(!fs.existsSync('articles')) {
@@ -76,7 +77,18 @@ var scrapeArticle = function(url, body) {
   var fileName = url.replace(/([^a-z0-9]+)/gi,'-') + '.json';
   byLine = $('.cnnByline strong').text();
   article.authorName = byLine.substring(0, byLine.length - 1);
-  article.timestamp = $('.cnn_strytmstmp').text();
+  var timestamp = $('.cnn_strytmstmp').text();
+
+  var timestampParts = timestamp.split(' -- ');
+  var date = moment.utc(timestampParts[0]);
+
+  if(timestampParts.length >=1 && timestampParts[1]) {
+    var time = timestampParts[1].match(/(\d{2})(\d{2}) GMT/);
+    date.hours(parseInt(time[1]));
+    date.minute(parseInt(time[2]));
+  }
+  article.timestamp = date.toISOString();
+
 
   var data = JSON.stringify(article, null, 2);
   fs.writeFileSync("articles/" + fileName, data);
