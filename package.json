@@ -1,0 +1,16 @@
+{
+  "name": "news-scraper",
+  "version": "0.0.1",
+  "description": "scrapes news articles and saves them in a normalized format",
+  "main": "scraper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jon Taylor",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "~0.13.1",
+    "request": "~2.33.0",
+    "lodash": "~2.4.1"
+  }
+}
